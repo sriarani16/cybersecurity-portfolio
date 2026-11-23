@@ -1,0 +1,2 @@
+sourcetype="_json"
+| top limit=3 dst_port
