@@ -1,0 +1,2 @@
+sourcetype="_json"
+| stats distinct_count(src_ip) AS No_of_Unique_Attackers
