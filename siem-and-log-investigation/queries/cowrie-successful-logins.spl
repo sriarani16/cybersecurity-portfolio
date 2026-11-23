@@ -1,0 +1,2 @@
+sourcetype="_json" eventid="cowrie.login.success"
+| stats count(eventid) AS successful_logins
