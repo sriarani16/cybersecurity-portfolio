@@ -1,0 +1,15 @@
+sourcetype="_json" eventid="cowrie.login.failed"
+| eval log_time = strptime(timestamp, "%Y-%m-%dT%H:%M:%S.%N")
+| stats count AS failed_count,
+        min(log_time) AS first_login,
+        max(log_time) AS last_login,
+        values(username) AS username,
+        values(password) AS password,
+        values(src_ip) AS attacker_ip,
+        values(eventid) AS eventid
+  BY session
+| eval time_taken = last_login - first_login
+| eval avg_time_per_attempt = if(failed_count > 0, time_taken / failed_count, 0)
+| eval attacker_type = if(avg_time_per_attempt > 1, "Human", "Bot")
+| where attacker_type="Human"
+| table session, attacker_ip, username, password, failed_count, time_taken, avg_time_per_attempt, attacker_type, eventid
